@@ -154,21 +154,68 @@ p, h1, h2, h3, h4, h5, h6 {
 }
 
 .compare-slider {
-    height:500px; 
+    height:600px; 
     display:grid;
     grid-template-columns: repeat(2, 1fr);
     cursor:grabbing;
+    margin-bottom:4rem;
 
 }
-.compare-slider__side-wrapper  {
+.compare-slider__slide-wrapper  {
     height:100%; 
     overflow: hidden;
 
 }
-.compare-slider__side-wrapper.left  {
+.compare-slider__slide-wrapper.left  {
     background-color:red;
+    border-right:1px solid #fff;
 }
 
-.compare-slider__side-wrapper.right  {
+.compare-slider__slide-wrapper.right  {
     background-color:blue;
+}
+
+
+.compare-slider__slide {
+    width:100vw;
+    height:100%;
+    position:relative;
+}
+.compare-slider__slide.right {
+    translate: -50% 0;
+}
+.compare-slider__image {
+    width:100%;
+    height:100%;
+    object-fit: cover;
+    position:absolute;
+    z-index:9;
+}
+.compare-slider__overlay {
+    background-color:rgba(0,0,0,0.3);
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:10;
+}
+.compare-slider__text {
+    position:absolute;
+    padding-bottom:5rem;
+    bottom:0;
+    z-index:10;
+    max-width:65ch;
+}
+
+.compare-slider__text.left {
+    left:0;
+    padding-left:9rem;
+    
+}
+.compare-slider__text.right {
+    right:0;
+    padding-right:9rem;
+    text-align:right;
+    
 }

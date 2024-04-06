@@ -25,8 +25,9 @@ class QuoteQuestion(models.Model):
         return self.question
 
 
-class ProjectCategory(models.Model):
+class Service(models.Model):
     title = models.CharField(max_length=30)
+    descritption = models.TextField()
 
     def __str__(self) -> str:
         return self.title
@@ -35,7 +36,7 @@ class ProjectCategory(models.Model):
 class Project(models.Model):
     customer = models.CharField(max_length=100)
     title = models.CharField(max_length=100)
-    categories = models.ManyToManyField(ProjectCategory, related_name="projects")
+    categories = models.ManyToManyField(Service, related_name="projects")
     overview = models.TextField()
     slug = models.SlugField(unique=True, editable=False, blank=True)
 
@@ -85,7 +86,18 @@ class CompareSlider(models.Model):
     image_one = models.ImageField(upload_to=slider_directory_path)
     title_one = models.CharField(max_length=100)
     info_one = models.TextField()
+    services_one = models.ManyToManyField(Service, related_name='first_slide')
 
     image_two = models.ImageField(upload_to=slider_directory_path)
     title_two =models.CharField(max_length=100)
     info_two = models.TextField()
+    services_two = models.ManyToManyField(Service, related_name='second_slide')
+
+    is_current = models.BooleanField(default=False)
+
+    def get_current():
+        return CompareSlider.objects.get(is_current=True)
+
+    def __str__(self):
+        return self.title_one
+

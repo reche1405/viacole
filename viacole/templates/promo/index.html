@@ -4,7 +4,7 @@
 <button class="btn global-get-quote__button">start now | get a quote</button>
 <section class="legend">
     <video class="legend__video" preload="none" autoplay muted loop>
-        <source src={{legend}}>
+        <source src={{legend.file.url}}>
     </video>
     <div class="legend__overlay">
         <div class="grid-pattern">
@@ -34,24 +34,58 @@
     </div>
 </section>
 <section class="compare-slider">
-    <div class="compare-slider__side-wrapper left"></div>
-    <div class="compare-slider__side-wrapper right"></div>
+    <div class="compare-slider__slide-wrapper left">
+        <div class="compare-slider__slide">
+            <img class="compare-slider__image" src="{{compare.image_one.url}}"/>
+            <div class="compare-slider__overlay">
+
+                <div class="compare-slider__text left">
+                    <h2>{{compare.title_one}}</h2>
+                    <p>{{ compare.info_one}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="compare-slider__slide-wrapper right">
+        <div class="compare-slider__slide right">
+            <img class="compare-slider__image right" src="{{compare.image_two.url}}"/>
+            <div class="compare-slider__overlay">
+
+                <div class="compare-slider__text right">
+                    <h2>{{compare.title_two}}</h2>
+                    <p>{{ compare.info_two}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 {% endblock content %}
 
 {% block scripts %}
 <script>
     const compareSlider = document.querySelector(".compare-slider");
+    const slideTwo = document.querySelector('.compare-slider__slide.right');
 
-const calculateCols = e => {
-    const leftPercent = (e.clientX / window.innerWidth) * 100;
-    const rightPercent = 100 - leftPercent;
-    const str = `grid-template-columns: ${leftPercent + '%' + ' ' + rightPercent + "%"}`
-    return str;
+const calculateCols = transformPercent => {
+    const rightPercent = 100 - transformPercent;
+    const str = `grid-template-columns: ${transformPercent + '%' + ' ' + rightPercent + "%;"}`
+    compareSlider.style = str;
+}
+const calculateTranslate = transformPercent => {
+    _style = `translate: -${transformPercent}% 0;`;
+    slideTwo.style = _style;
+}
+
+const calculateImageSlider = (e) => {
+    const transformPercent =  (e.clientX / window.innerWidth) * 100;
+    calculateTranslate(transformPercent);
+    calculateCols(transformPercent);
+
+    
 }
 
     compareSlider.addEventListener('mousemove', e => {
-        compareSlider.style = calculateCols(e);
+        calculateImageSlider(e);
     })
 </script>
 {% endblock scripts %}
