@@ -46,7 +46,7 @@ class Project(models.Model):
 
 class ProjectMedia():
     def project_directory_path(instance, filename):
-        return f"projects/{instance.project.title}/{filename}"
+        return f"projects/{instance.project.slug}/{filename}"
     
     file = models.FileField(
         upload_to=project_directory_path, null=True,
@@ -63,6 +63,8 @@ class Quote(models.Model):
 class LegendVideo(models.Model):
     def legend_directory_path(instance, filename):
         return f"legends/{filename}"
+    title = models.CharField(max_length=100, default="Current Video")
+    info = models.TextField()
     file = models.FileField(
         upload_to=legend_directory_path, null=True,
         validators=[FileExtensionValidator(allowed_extensions=['MOV', 'mp4', 'avi', 'mkv'])]
@@ -70,6 +72,20 @@ class LegendVideo(models.Model):
     date_uploaded = models.DateTimeField(auto_now_add=True)
     is_current = models.BooleanField(default=False)
 
+    def __str__(self) -> str:
+        return self.title
+
     def get_current():
         return LegendVideo.objects.get(is_current = True)
 
+
+class CompareSlider(models.Model):
+    def slider_directory_path(instance, filename):
+        return f"compare/{instance.id}/{filename}"
+    image_one = models.ImageField(upload_to=slider_directory_path)
+    title_one = models.CharField(max_length=100)
+    info_one = models.TextField()
+
+    image_two = models.ImageField(upload_to=slider_directory_path)
+    title_two =models.CharField(max_length=100)
+    info_two = models.TextField()

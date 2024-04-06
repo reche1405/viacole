@@ -1,0 +1,57 @@
+{% extends "promo/base.html" %}
+
+{% block content %}
+<button class="btn global-get-quote__button">start now | get a quote</button>
+<section class="legend">
+    <video class="legend__video" preload="none" autoplay muted loop>
+        <source src={{legend}}>
+    </video>
+    <div class="legend__overlay">
+        <div class="grid-pattern">
+            <div class="col-end"></div>
+            <div class="col-end"></div>
+            <div class="col-end"></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div class="col-end"></div>
+            <div class="col-end"></div>
+            <div class="col-end"></div>
+        </div>
+        <h1 class="legend__header">Designing Today For A Better Tommorrow</h1>    
+        <p class="legend__subheader">HIGH VALUE LANDSCAPE DESIGN</p>     
+        <nav class="legend__nav">
+            <li class="legend__nav-item" >PORTFOLIO</li>
+            <li class="legend__nav-item">SERVICES</li>
+            <li class="legend__nav-item">GET A QUOTE</li>
+        </nav>
+    </div>
+</section>
+<section class="services-link"/>
+    <div class="services-link__content">
+        <span>SERVICES</span>
+        <button class="btn">view all</button>
+    </div>
+</section>
+<section class="compare-slider">
+    <div class="compare-slider__side-wrapper left"></div>
+    <div class="compare-slider__side-wrapper right"></div>
+</section>
+{% endblock content %}
+
+{% block scripts %}
+<script>
+    const compareSlider = document.querySelector(".compare-slider");
+
+const calculateCols = e => {
+    const leftPercent = (e.clientX / window.innerWidth) * 100;
+    const rightPercent = 100 - leftPercent;
+    const str = `grid-template-columns: ${leftPercent + '%' + ' ' + rightPercent + "%"}`
+    return str;
+}
+
+    compareSlider.addEventListener('mousemove', e => {
+        compareSlider.style = calculateCols(e);
+    })
+</script>
+{% endblock scripts %}
