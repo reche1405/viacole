@@ -27,7 +27,7 @@
         </nav>
     </div>
 </section>
-<section class="services-link"/>
+<section class="services-link">
     <div class="services-link__content">
         <span>SERVICES</span>
         <button class="btn">view all</button>
@@ -72,12 +72,14 @@ const calculateCols = transformPercent => {
     compareSlider.style = str;
 }
 const calculateTranslate = transformPercent => {
-    _style = `translate: -${transformPercent}% 0;`;
+    _style = `translate: ${-transformPercent}% 0;`;
     slideTwo.style = _style;
 }
 
 const calculateImageSlider = (e) => {
-    const transformPercent =  (e.clientX / window.innerWidth) * 100;
+
+    const xPos = e.clientX ? e.clientX : e.touches[0].clientX
+    const transformPercent =  (xPos / window.innerWidth) * 100;
     calculateTranslate(transformPercent);
     calculateCols(transformPercent);
 
@@ -85,6 +87,16 @@ const calculateImageSlider = (e) => {
 }
 
     compareSlider.addEventListener('mousemove', e => {
+        calculateImageSlider(e);
+    })
+
+    compareSlider.addEventListener('touchstart', e => {
+        e.preventDefault();
+        console.log(e.type)
+        calculateImageSlider(e);
+    })
+    compareSlider.addEventListener('touchmove', e => {
+        e.preventDefault();
         calculateImageSlider(e);
     })
 </script>

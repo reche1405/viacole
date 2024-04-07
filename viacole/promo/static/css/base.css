@@ -106,7 +106,7 @@ p, h1, h2, h3, h4, h5, h6 {
     left:0;
     width:100%;
     height:100%;
-    background-image:radial-gradient(rgba(0,0,0,0.15),rgba(0,0,0,0.6));
+    background-image:radial-gradient(rgba(0,0,0,0.35),rgba(0,0,0,0.7));
     display: flex; 
     flex-direction: column;
     align-items: center;
@@ -187,7 +187,7 @@ p, h1, h2, h3, h4, h5, h6 {
 .compare-slider__image {
     width:100%;
     height:100%;
-    object-fit: cover;
+    /* object-fit: cover; */
     position:absolute;
     z-index:9;
 }
