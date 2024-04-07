@@ -59,6 +59,9 @@
         </div>
     </div>
 </section>
+<section class="featured">
+
+</section>
 {% endblock content %}
 
 {% block scripts %}
@@ -72,14 +75,14 @@ const calculateCols = transformPercent => {
     compareSlider.style = str;
 }
 const calculateTranslate = transformPercent => {
-    _style = `translate: ${-transformPercent}% 0;`;
+    _style = `translate: ${-transformPercent}lvw 0;`;
     slideTwo.style = _style;
 }
 
 const calculateImageSlider = (e) => {
 
     const xPos = e.clientX ? e.clientX : e.touches[0].clientX
-    const transformPercent =  (xPos / window.innerWidth) * 100;
+    const transformPercent =  (xPos / (window.innerWidth - 15)) * 100;
     calculateTranslate(transformPercent);
     calculateCols(transformPercent);
 

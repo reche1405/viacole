@@ -36,12 +36,21 @@ class Service(models.Model):
 class Project(models.Model):
     customer = models.CharField(max_length=100)
     title = models.CharField(max_length=100)
-    categories = models.ManyToManyField(Service, related_name="projects")
+    services = models.ManyToManyField(Service, related_name="projects")
     overview = models.TextField()
     slug = models.SlugField(unique=True, editable=False, blank=True)
+    is_featured = models.BooleanField(default=False)
+
+    def get_feauted():
+        return Project.objects.get(is_featured=True)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
+        if self.is_featured:
+            old_featured =  Project.get_feauted()
+            if not old_featured == self:
+                old_featured.is_featured = False
+                old_featured.save()
         super(self, Project).save(self, *args, **kwargs)
 
 
