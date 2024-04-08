@@ -3,6 +3,7 @@ from django.core.validators import FileExtensionValidator
 from django.utils.text import slugify
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ObjectDoesNotExist
 
 ANSWER_TYPES = (
     ("TE", "TEXT FIELD"),
@@ -47,11 +48,18 @@ class Project(models.Model):
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
         if self.is_featured:
-            old_featured =  Project.get_feauted()
-            if not old_featured == self:
-                old_featured.is_featured = False
-                old_featured.save()
-        super(self, Project).save(self, *args, **kwargs)
+            try:
+                old_featured =  Project.get_feauted()
+            except ObjectDoesNotExist as e:
+                print(e)
+            else:
+                if not old_featured == self:
+                    old_featured.is_featured = False
+                    old_featured.save()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.title
 
 
 class ProjectMedia():
@@ -59,7 +67,7 @@ class ProjectMedia():
         return f"projects/{instance.project.slug}/{filename}"
     
     file = models.FileField(
-        upload_to=project_directory_path, null=True,
+        upload_to=project_directory_path(), null=True,
         validators=[FileExtensionValidator(allowed_extensions=['MOV', 'mp4', 'avi', 'mkv'])]
     )
     date_uploaded = models.DateTimeField(auto_now_add=True)
