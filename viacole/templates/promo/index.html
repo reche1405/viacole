@@ -60,7 +60,42 @@
     </div>
 </section>
 <section class="featured">
-
+    <video autoplay muted loop>
+        <source src="{{featured_video.file.url}}"/>
+    </video>
+    <div class="featured__overlay">
+        <h3 class="featured__label">FEATURED</h3>
+        <p class="featured__title">{{featured.title|upper }}</p>
+    </div>
+</section>
+<section class="portfolio">
+    <div class="portfolio-slider__wrapper">
+        <div class="portfolio-slider__arrow">
+            <button class="portfolio-slider__arrow-button">-></button>
+        </div>
+        <div class="portfolio-slider__container">
+            <div class="portfolio-slide draggable current">
+                <div class="portfolio-slide__image"></div>
+            </div>
+            <div class="portfolio-slide draggable">
+                <div class="portfolio-slide__image"></div>
+                
+            </div>
+            <div class="portfolio-slide draggable">
+                <div class="portfolio-slide__image"></div>
+                
+            </div>
+            <div class="portfolio-slide draggable">
+                <div class="portfolio-slide__image"></div>
+                
+            </div>
+            
+           
+        </div>
+    </div>
+</section>
+<section>
+    
 </section>
 {% endblock content %}
 
@@ -68,6 +103,9 @@
 <script>
     const compareSlider = document.querySelector(".compare-slider");
     const slideTwo = document.querySelector('.compare-slider__slide.right');
+
+    const portfolioSlider = document.querySelector(".portfolio-slider__container");
+    const portfolioSlides = portfolioSlider.childNodes;
 
 const calculateCols = transformPercent => {
     const rightPercent = 100 - transformPercent;

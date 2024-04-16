@@ -62,16 +62,17 @@ class Project(models.Model):
         return self.title
 
 
-class ProjectMedia():
+class ProjectMedia(models.Model):
     def project_directory_path(instance, filename):
         return f"projects/{instance.project.slug}/{filename}"
     
     file = models.FileField(
-        upload_to=project_directory_path(), null=True,
+        upload_to=project_directory_path, null=True,
         validators=[FileExtensionValidator(allowed_extensions=['MOV', 'mp4', 'avi', 'mkv'])]
     )
     date_uploaded = models.DateTimeField(auto_now_add=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="media")
+
 
 
 class Quote(models.Model):

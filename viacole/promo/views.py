@@ -1,16 +1,22 @@
 from django.shortcuts import render
 from django import views
-from .models import CompareSlider, LegendVideo
+from .models import CompareSlider, LegendVideo, Project, ProjectMedia
 
 TEMPLATE_BASE = "promo/"
 
 # Create your views here.
 class HomeView(views.View):
     def get(self, *args, **kwargs):
-        home_video = LegendVideo.get_current()
+        legend_video = LegendVideo.get_current()
         compare_slider = CompareSlider.get_current()
+        featured_project = Project.get_feauted()
+        featured_video = ProjectMedia.objects.filter(project=featured_project)
+        featured_video = featured_video[0]
         context = {
-            "legend" : home_video,
-            "compare" : compare_slider
+            "legend" : legend_video,
+            "compare" : compare_slider,
+            "featured" : featured_project,
+            "featured_video" : featured_video
+
         }
         return render(self.request, f'{TEMPLATE_BASE}index.html', context)
