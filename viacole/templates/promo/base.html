@@ -9,8 +9,22 @@
     <title>Document</title>
 </head>
 <body>
-    <header>
+    <header class="page__header">
+        <button class="nav-burger">=</button>
+        <img class="header__logo" src="{% static 'logos/Viacole_White.png'%}"/>
+        <div></div>
     </header>
+    <nav class="nav">
+        <a>
+            <li>HOME</li>
+        </a>
+        <a>
+            <li>SERVICES</li>
+        </a>
+        <a>
+            <li>PORTAL</li>
+        </a>
+    </nav>
     {% block content %}{% endblock content %}
 
 

@@ -119,3 +119,15 @@ class CompareSlider(models.Model):
     def __str__(self):
         return self.title_one
 
+class Testimonial(models.Model):
+    def testimonial_directory_path(instance, filename):
+        return f"testimonials/{filename}"
+    statement = models.TextField()
+    client_type = models.CharField(max_length=100)
+    image = models.ImageField(upload_to=testimonial_directory_path)
+
+    def get_random_tesimonials():
+        return Testimonial.objects.all().order_by("?")[0:3]
+
+    def __str__(self):
+        return self.statement

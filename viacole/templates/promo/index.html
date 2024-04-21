@@ -94,9 +94,18 @@
         </div>
     </div>
 </section>
-<section>
-    
-</section>
+
+<section class="testimonials">
+{% for testimonial in testimonials %}
+<div class="testimonial">
+    <img class="testimonial__img" src="{{testimonial.image.url}}"/>
+    <div class="testimonial__overlay">
+        <p class="testimonial__statement">" {{testimonial.statement}} "</p>
+        <span class="testimonial__client">{{testimonial.client_type}}</span>
+    </div>
+</div>
+{% endfor %}
+</section>    
 {% endblock content %}
 
 {% block scripts %}
@@ -105,7 +114,14 @@
     const slideTwo = document.querySelector('.compare-slider__slide.right');
 
     const portfolioSlider = document.querySelector(".portfolio-slider__container");
-    const portfolioSlides = portfolioSlider.childNodes;
+    const portfolioSlides = document.querySelectorAll('.portfolio-slide');
+    const portfolioNextButton = document.querySelector('.portfolio-slider__arrow-button');
+
+
+
+
+    const testimonals = document.querySelectorAll(".testimonial");
+    console.log(testimonals);
 
 const calculateCols = transformPercent => {
     const rightPercent = 100 - transformPercent;
@@ -140,5 +156,38 @@ const calculateImageSlider = (e) => {
         e.preventDefault();
         calculateImageSlider(e);
     })
+
+
+
+
+   
+    portfolioNextButton.addEventListener('click', e => {
+        const currentIndex = portfolioSlides.indexOf(portfolioSlides.find(s => s.classList.contains("current")));
+        portfolioSlides.forEach(s =>  s.classList.remove("current"));
+        portfolioSlider.classList.add('animating-left');
+
+        setTimeout(() => {
+
+            portfolioSlider.classList.remove('animating-left');
+        },1000);
+
+    })
+
+
+    const setActiveTestimonial = (e) => {
+        testimonals.forEach(t =>  t.classList.remove("active"))
+        e.target.classList.add("active");
+    }
+
+    testimonals[0].classList.add("active");
+
+    testimonals[0].parentElement.addEventListener("mouseleave", () => {
+        testimonals.forEach(t =>  t.classList.remove("active"))
+        testimonals[0].classList.add("active");
+    })
+    testimonals.forEach(t => {
+        return t.addEventListener('mouseenter', setActiveTestimonial);
+    })
+
 </script>
 {% endblock scripts %}
