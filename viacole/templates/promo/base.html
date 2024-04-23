@@ -10,11 +10,18 @@
 </head>
 <body>
     <header class="page__header">
-        <button class="nav-burger">=</button>
-        <img class="header__logo" src="{% static 'logos/Viacole_White.png'%}"/>
+        <button class="nav-burger">
+            <div class="burger-line"></div>
+            <div class="burger-line"></div>
+            <div class="burger-line"></div>
+        </button>
+        <img class="header__logo nav__logo" src="{% static 'logos/Viacole_White.png'%}"/>
         <div></div>
     </header>
     <nav class="nav">
+        <button class="nav__close">Close</button>
+        <img class="header__logo" src="{% static 'logos/Viacole_White.png'%}"/>
+
         <a>
             <li>HOME</li>
         </a>
@@ -26,8 +33,28 @@
         </a>
     </nav>
     {% block content %}{% endblock content %}
+    <footer>
+        
+    </footer>
 
+    <script>
+        const closeButton = document.querySelector(".nav__close");
+        const nav = document.querySelector(".nav");
+        const burger = document.querySelector(".nav-burger");
 
+        const openNav = () => {
+            nav.classList.add("open");
+        }
+
+        const closeNav = () => {
+            nav.classList.remove("open");
+            console.log("THis should close the nav bar")
+        }
+
+        burger.addEventListener('click', openNav);
+
+        closeButton.addEventListener('click', closeNav);
+    </script>
     {% block scripts %}
     {% endblock scripts %}
 </body>

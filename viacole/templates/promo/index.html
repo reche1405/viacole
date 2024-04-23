@@ -1,7 +1,7 @@
 {% extends "promo/base.html" %}
 
 {% block content %}
-<button class="btn global-get-quote__button">start now | get a quote</button>
+<button class="btn global-get-quote__button">start now | register</button>
 <section class="legend">
     <video class="legend__video" preload="none" autoplay muted loop>
         <source src={{legend.file.url}}>
@@ -23,7 +23,7 @@
         <nav class="legend__nav">
             <li class="legend__nav-item" >PORTFOLIO</li>
             <li class="legend__nav-item">SERVICES</li>
-            <li class="legend__nav-item">GET A QUOTE</li>
+            <li class="legend__nav-item">REGISTER</li>
         </nav>
     </div>
 </section>
@@ -74,9 +74,26 @@
             <button class="portfolio-slider__arrow-button">-></button>
         </div>
         <div class="portfolio-slider__container">
-            <div class="portfolio-slide draggable current">
-                <div class="portfolio-slide__image"></div>
+
+            {% for project in portfolio %}
+            {% if forloop.counter == 1 %}
+            <div class="portfolio-slide current draggable">
+            {% else %}
+            <div class="portfolio-slide  draggable">
+            {% endif %}
+                <div class="portfolio-slide__image">
+                    {% for media in project.media.all%}
+                    <video autoplay muted loop>
+                        <source src="{{ media.file.url }}">
+
+                    </video>
+                    {% endfor %}
+
+                </div>
+                <h2 class="portfolio-slide__title">{{project.title|upper}}</h2>
             </div>
+            {% endfor %}
+           
             <div class="portfolio-slide draggable">
                 <div class="portfolio-slide__image"></div>
                 
@@ -114,34 +131,34 @@
     const slideTwo = document.querySelector('.compare-slider__slide.right');
 
     const portfolioSlider = document.querySelector(".portfolio-slider__container");
-    const portfolioSlides = document.querySelectorAll('.portfolio-slide');
+    let portfolioSlides = document.querySelectorAll('.portfolio-slide');
     const portfolioNextButton = document.querySelector('.portfolio-slider__arrow-button');
 
 
 
 
     const testimonals = document.querySelectorAll(".testimonial");
-    console.log(testimonals);
 
-const calculateCols = transformPercent => {
-    const rightPercent = 100 - transformPercent;
-    const str = `grid-template-columns: ${transformPercent + '%' + ' ' + rightPercent + "%;"}`
-    compareSlider.style = str;
-}
-const calculateTranslate = transformPercent => {
-    _style = `translate: ${-transformPercent}lvw 0;`;
-    slideTwo.style = _style;
-}
+    const calculateCols = transformPercent => {
+        const rightPercent = 100 - transformPercent;
+        const str = `grid-template-columns: ${transformPercent + '%' + ' ' + rightPercent + "%;"}`
+        compareSlider.style = str;
+    }
+    const calculateTranslate = transformPercent => {
+        _style = `translate: ${-transformPercent}lvw 0;`;
+        slideTwo.style = _style;
+    }
 
-const calculateImageSlider = (e) => {
+    const calculateImageSlider = (e) => {
 
-    const xPos = e.clientX ? e.clientX : e.touches[0].clientX
-    const transformPercent =  (xPos / (window.innerWidth - 15)) * 100;
-    calculateTranslate(transformPercent);
-    calculateCols(transformPercent);
+        if (window.innerWidth < 768) {return;}
+        const xPos = e.clientX ? e.clientX : e.touches[0].clientX
+        const transformPercent =  (xPos / (window.innerWidth - 15)) * 100;
+        calculateTranslate(transformPercent);
+        calculateCols(transformPercent);
 
-    
-}
+        
+    }
 
     compareSlider.addEventListener('mousemove', e => {
         calculateImageSlider(e);
@@ -162,14 +179,21 @@ const calculateImageSlider = (e) => {
 
    
     portfolioNextButton.addEventListener('click', e => {
-        const currentIndex = portfolioSlides.indexOf(portfolioSlides.find(s => s.classList.contains("current")));
-        portfolioSlides.forEach(s =>  s.classList.remove("current"));
+        const current = [...portfolioSlides].find(s => s.classList.contains("current"));
+        const next = current.nextElementSibling;
         portfolioSlider.classList.add('animating-left');
-
+        const duplicate = current.cloneNode(true);
+        portfolioSlides = document.querySelectorAll('.portfolio-slide');
+        current.classList.remove("current");
         setTimeout(() => {
-
+            
+            portfolioSlider.appendChild(duplicate);
+            duplicate.classList.remove("current");
+            next.classList.add("current");
             portfolioSlider.classList.remove('animating-left');
-        },1000);
+           current.remove();
+        },600);
+
 
     })
 

@@ -60,6 +60,9 @@ class Project(models.Model):
 
     def __str__(self):
         return self.title
+    
+    def get_home_portfolio():
+        return Project.objects.all().order_by("?")[0:4]
 
 
 class ProjectMedia(models.Model):
