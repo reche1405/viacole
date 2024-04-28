@@ -12,8 +12,7 @@ ANSWER_TYPES = (
     ("TA", "TEXT AREA"),
 )
 
-class Profile(models.Model):
-    user = get_user_model()
+
 
 
 # Create your models here.
@@ -62,7 +61,9 @@ class Project(models.Model):
         return self.title
     
     def get_home_portfolio():
-        return Project.objects.all().order_by("?")[0:4]
+
+        projects = Project.objects.all().order_by("?")[0:4]
+        return projects
 
 
 class ProjectMedia(models.Model):
@@ -76,11 +77,6 @@ class ProjectMedia(models.Model):
     date_uploaded = models.DateTimeField(auto_now_add=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="media")
 
-
-
-class Quote(models.Model):
-    profile = models.ForeignKey(Profile, on_delete=models.DO_NOTHING, blank=True, null=True, related_name="quotes")
-    #TODO: Add the fields that will relate to the quotes
 
 class LegendVideo(models.Model):
     def legend_directory_path(instance, filename):
@@ -134,3 +130,101 @@ class Testimonial(models.Model):
 
     def __str__(self):
         return self.statement
+
+class Page(models.Model):
+    title = models.CharField(max_length=100)
+    slug=models.SlugField(max_length=100, editable=False)
+    description = models.TextField(blank=True, null=True)
+    keywords=models.TextField()
+    tab_title = models.TextField()
+
+    def __str__(self):
+        return self.title
+    
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
+
+    def get_page(page):
+        try: 
+            return Page.objects.get(title=page)
+        except ObjectDoesNotExist as e:
+            print(f"There has been an error as the following page: {page} does not exist.")
+
+
+class BudgetRange(models.Model):
+    from_value = models.IntegerField()
+    to_value = models.IntegerField()
+
+    def __str__(self):
+        return f"{self.from_value} - {self.to_value}"
+    
+
+
+class AboutContent(models.Model):
+
+    def upload_legend(instance, filename):
+        return f"about/{filename}"
+    
+    about_legend = models.ImageField(upload_to=upload_legend)
+    legend_title = models.CharField(max_length=100)
+    legend_text = models.TextField()
+    title_one = models.CharField(max_length=100, blank=True, null=True)
+    text_one = models.TextField()
+    title_two = models.CharField(max_length=100, blank=True, null=True)
+    text_two = models.TextField(blank=True, null=True)
+    title_three = models.CharField(max_length=100,  blank=True, null=True)
+    text_three = models.TextField(blank=True, null=True)
+    is_current = models.BooleanField(default=False)
+
+    def get_current():
+        return AboutContent.objects.get(is_current=True)
+
+    def save(self, *args, **kwargs): 
+        old_current = AboutContent.get_current()
+        if old_current != self and self.is_current:
+            old_current.is_current = False
+            old_current.save()
+        super().save(*args, **kwargs)
+
+class Term(models.Model):
+    title = models.CharField(max_length=200)
+    section = models.IntegerField()
+    sub_section = models.IntegerField()
+    body = models.TextField()
+
+    def __str__(self) -> str:
+        if self.title: 
+            return f"{self.section}.{self.sub_section} - {self.title}"
+        return f"{self.section}.{self.sub_section}"
+    
+class FrequentlyAskedQuestion(models.Model):
+    question = models.TextField()
+    answer = models.TextField()
+
+    def __str__(self) -> str:
+        return self.question
+
+
+class Profile(models.Model):
+    user = get_user_model()
+    is_buyer = models.BooleanField(default=False)
+    is_seller = models.BooleanField(default=False)
+    buyers_budget = models.ForeignKey(
+        BudgetRange,
+        on_delete=models.DO_NOTHING,
+        blank=True, null=True,
+        related_name="buyers_profile"
+    )
+    sellers_budget = models.ForeignKey(
+        BudgetRange,
+        on_delete=models.DO_NOTHING,
+        blank=True, null=True,
+        related_name="sellers_profile"
+    )
+    interested_services = models.ManyToManyField(Service, related_name="buyers_profiles")
+    interested_consignments  = models.ManyToManyField(Service, related_name="sellers_profiles")
+    is_verified = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.user.email
