@@ -26,8 +26,11 @@ class QuoteQuestion(models.Model):
 
 
 class Service(models.Model):
+    def service_upload(instance, filename):
+        return f"services/{instance.title}/{filename}"
     title = models.CharField(max_length=30)
-    descritption = models.TextField()
+    description = models.TextField()
+    image = models.ImageField(upload_to=service_upload, blank=True, null=True)
 
     def __str__(self) -> str:
         return self.title
@@ -175,23 +178,34 @@ class AboutContent(models.Model):
     text_two = models.TextField(blank=True, null=True)
     title_three = models.CharField(max_length=100,  blank=True, null=True)
     text_three = models.TextField(blank=True, null=True)
+    datetime_added = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     is_current = models.BooleanField(default=False)
 
     def get_current():
-        return AboutContent.objects.get(is_current=True)
+        try:
+            return AboutContent.objects.get(is_current=True)
+        except ObjectDoesNotExist as e:
+            return None
 
     def save(self, *args, **kwargs): 
-        old_current = AboutContent.get_current()
-        if old_current != self and self.is_current:
-            old_current.is_current = False
-            old_current.save()
+        if AboutContent.get_current():
+            old_current = AboutContent.get_current()
+            if old_current != self and self.is_current:
+                old_current.is_current = False
+                old_current.save()
         super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"ABOUT {self.datetime_added.strftime('%d%m%Y')}"
 
 class Term(models.Model):
     title = models.CharField(max_length=200)
     section = models.IntegerField()
     sub_section = models.IntegerField()
     body = models.TextField()
+
+    def get_terms():
+        return Term.objects.all().order_by('section', 'sub_section')
 
     def __str__(self) -> str:
         if self.title: 

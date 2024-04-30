@@ -23,15 +23,25 @@
         <button class="nav__close">Close</button>
         <img class="header__logo" src="{% static 'logos/Viacole_White.png'%}"/>
 
-        <a>
+        <a href="{% url 'home' %}">
             <li>HOME</li>
         </a>
-        <a>
+        <a href="{% url 'services' %}">
+
             <li>SERVICES</li>
         </a>
-        <a>
-            <li>PORTAL</li>
+        <a href="{% url 'about' %}">
+            <li>ABOUT</li>
         </a>
+        <div>
+            <a href="">
+                <span>FAQ</span>
+            </a>
+            <span> . </span>
+            <a href="{% url 'terms' %}">
+                <span>TERMS</span>
+            </a>
+        </div>
     </nav>
     {% block content %}{% endblock content %}
     <footer>

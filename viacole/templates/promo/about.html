@@ -1,0 +1,36 @@
+{% extends 'promo/base.html' %}
+{% block content %}
+{% comment %} <section class="standard__content">
+
+    <h1 class="standard__page-title">ABOUT</h1>
+</section> {% endcomment %}
+<main class="full__content">
+    <section class="about__section">
+        <div class="about__details">
+            <h2>{{about.title_one}}</h2>
+            <p>{{about.text_one}}</p>
+        </div>
+        <div class="about__image">
+        </div>
+
+    </section>
+    <section class="about__section">
+        <div class="about__details">
+            <h2>{{about.title_two}}</h2>
+            <p>{{about.text_two}}</p>
+        </div>
+        <div class="about__image">
+        </div>
+
+    </section>
+    <section class="about__section">
+        <div class="about__details">
+            <h2>{{about.title_one}}</h2>
+            <p>{{about.text_one}}</p>
+        </div>
+        <div class="about__image">
+        </div>
+
+    </section>
+</main>
+{% endblock content %}

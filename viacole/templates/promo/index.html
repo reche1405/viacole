@@ -1,7 +1,7 @@
 {% extends "promo/base.html" %}
 
 {% block content %}
-<button class="btn global-get-quote__button">start now | register</button>
+<a href="{% url 'accounts/signup' %}" class="btn global-get-quote__button">start now | register</a>
 <section class="legend">
     <video class="legend__video" preload="none" autoplay muted loop>
         <source src={{legend.file.url}}>
@@ -18,8 +18,8 @@
             <div class="col-end"></div>
             <div class="col-end"></div>
         </div>
-        <h1 class="legend__header">Designing Today For A Better Tommorrow</h1>    
-        <p class="legend__subheader">HIGH VALUE LANDSCAPE DESIGN</p>     
+        <h1 class="legend__header">{{legend.title}}</h1>    
+        <p class="legend__subheader">{{legend.info}}</p>     
         <nav class="legend__nav">
             <li class="legend__nav-item" >PORTFOLIO</li>
             <li class="legend__nav-item">SERVICES</li>
@@ -30,7 +30,7 @@
 <section class="services-link">
     <div class="services-link__content">
         <span>SERVICES</span>
-        <button class="btn">view all</button>
+        <a class="btn-link" href="{% url 'services' %}">view all</a>
     </div>
 </section>
 <section class="compare-slider">

@@ -1,0 +1,18 @@
+{% extends "promo/base.html" %}
+
+{% block content %}
+<main class="standard__content">
+<h1 class="standard__page-title">TERMS &amp; CONDITIONS</h1>
+{% for term in terms %}
+
+    {% if term.sub_section == 0 %}
+    <div class="terms">
+    {% else %}
+    <div class="terms subsection">
+    {% endif %}
+        <h2>{{term.section }}.{{ term.sub_section}} {{term.title}}</h2>
+        <p>{{term.body}}</p>
+    </div>
+{% endfor %}
+</main>
+{% endblock content %}

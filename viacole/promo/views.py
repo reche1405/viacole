@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django import views
-from .models import CompareSlider, LegendVideo, Project, ProjectMedia, Testimonial, Page, AboutContent
+from .models import CompareSlider, LegendVideo, Project, ProjectMedia, Testimonial,\
+     Term, Page, AboutContent, Service
 from .forms import RegistrationForm
 
 TEMPLATE_BASE = "promo/"
@@ -28,25 +29,47 @@ class HomeView(views.View):
         }
         return render(self.request, f'{TEMPLATE_BASE}index.html', context)
     
-class About(views.View):
+class AboutView(views.View):
     def get(self, *args, **kwargs):
         meta = Page.get_page("About")
         about_content =  AboutContent.get_current()
         context = {
             'meta' : meta,
-            'about_content' : about_content,
+            'about' : about_content,
             
         }
         return render(self.request, f'{TEMPLATE_BASE}about.html', context )
     
-    class Register(views.View):
-        def get(self, *args, **kwargs):
-            form = RegistrationForm()
-            context = {
-                'form' : form,
-            }
-            return render(self.request,f"{TEMPLATE_BASE}register.html", context)
-        
-    class Login(views.View): 
-        def get(self, *args, **kwargs): 
-            pass
+class ServicesView(views.View):
+    def get(self, *args, **kwargs):
+        meta = Page.get_page("Services")
+        services = Service.objects.all()
+        context = {
+            "meta" : meta,
+            "services" : services
+        }
+        return render(self.request, f"{TEMPLATE_BASE}services.html", context)
+    
+class RegisterView(views.View):
+    def get(self, *args, **kwargs):
+        form = RegistrationForm()
+        context = {
+            'form' : form,
+        }
+        return render(self.request,f"{TEMPLATE_BASE}register.html", context)
+    
+class LoginView(views.View): 
+    def get(self, *args, **kwargs): 
+        pass
+
+
+class TermsView(views.View):
+    def get(self, *args, **kwargs):
+        meta = Page.get_page("Terms")
+        terms = Term.get_terms()
+        context = {
+            'meta' : meta,
+            'terms' : terms,
+        }
+        return render(self.request, f"{TEMPLATE_BASE}terms.html", context)
+    
