@@ -1,9 +1,10 @@
-{% extends "account/base_manage.html" %}
+{% extends "promo/base.html" %}
 {% load allauth i18n %}
 {% block head_title %}
     {% trans "Sign Out" %}
 {% endblock head_title %}
 {% block content %}
+    <main class="standard__content">
     {% element h1 %}
         {% trans "Sign Out" %}
     {% endelement %}
@@ -24,4 +25,5 @@
             {% endelement %}
         {% endslot %}
     {% endelement %}
+    </main>
 {% endblock content %}

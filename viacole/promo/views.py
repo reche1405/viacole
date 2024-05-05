@@ -53,13 +53,27 @@ class ServicesView(views.View):
 class RegisterView(views.View):
     def get(self, *args, **kwargs):
         form = RegistrationForm()
+        services = Service.objects.all()
         context = {
             'form' : form,
+            'services' : services
         }
         return render(self.request,f"{TEMPLATE_BASE}register.html", context)
+    def post(self, *args, **kwargs):
+        form = RegistrationForm(self.request.POST)
+        if form.is_valid():
+            pass
+
     
 class LoginView(views.View): 
     def get(self, *args, **kwargs): 
+        form = RegistrationForm
+        meta= Page.get_page("Login")
+        context = {
+            'meta' : meta,
+            'form' : form
+        }
+        return render(self.request, f"{TEMPLATE_BASE}")
         pass
 
 

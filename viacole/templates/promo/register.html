@@ -1,0 +1,229 @@
+{% extends 'promo/base.html' %}
+{% load allauth i18n %}
+
+{% block content %}
+<main class="standard__content">
+    <h1>Welcome {% if request.user.is_authenticated %}{{user.first_name}}{% endif %}
+
+    </h1>
+    <p>
+        Please complete your registration by filling out the below form.
+    </p>
+<div class="account__form">
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form__slider">
+            <div class="form__slide form__slide--current intro">
+                <p class="form__question">
+                    What aspects of the platform are of interest to you?
+                </p>
+                <div class="form__control">
+                    <div class="form__label">
+                        <label>Vendor Services </label>
+                    </div>
+                    <div class="form__input--full">
+                        <div class="custom__checkbox"/>
+                            {{form.is_buyer}}
+                        </div>
+                    </div>
+                    <div class="form__label">
+                        <label>Client Services </label>
+                    </div>
+                    <div class="form__input--full">
+                        <div class="custom__checkbox"/>
+                            {{form.is_vendor}}
+                        </div>
+                    </div>
+                
+                </div>
+                <button class="form__next-button" disabled>Next</button>
+            </div>
+       
+            <div class="form__slide client">
+
+                <div class="form__label">
+                    <label>Interested Services (Client) </label>
+                </div>
+                <div class="form__input--full">
+                        <div style="display:none">
+                        {{form.purchase_interests}}
+                        </div>
+                        <div class="pill-flex">
+                            {% for service in services %}
+        
+                            <button class="btn btn-pill">{{service.title}}</button>
+                            {% endfor %}
+                        </div>
+                </div>
+
+                <div class="form__label">
+                    <label>Budget Range(Client) </label>
+                </div>
+                <div class="range__slider">
+                    <div class="range__button lower" style="left:10%">  </div>
+                    <div class="range__container" style="grid-template-columns:10% 1fr 10%">
+                        <div class="range__pad"></div>
+                        <div class="range__selected"></div>
+                        <div class="range__pad"></div>
+                    </div>
+                    <div class="range__button upper" style="right:10%">  </div>
+                </div>
+                <div class="range__values client">
+                    <span class="range__value--lower">10M</span>
+                    <spam class="range__value--upper">90M</span>
+                </div>
+
+                <button class="form__next-button" disabled>Next</button>
+            </div>
+
+            <div class="form__slide vendor">
+
+                <div class="form__label">
+                    <label>Interested Consignments (Vendor) </label>
+                </div>
+                <div class="form__input--full">
+                        <div style="display:none">
+                        {{form.consignment_interests}}
+                        </div>
+                        <div class="pill-flex">
+                            {% for service in services %}
+        
+                            <button class="btn btn-pill">{{service.title}}</button>
+                            {% endfor %}
+                        </div>
+                </div>
+
+                <div class="form__label">
+                    <label>Budget Range(Vendor) </label>
+                </div>
+                <div class="range__slider">
+                    <div class="range__button lower" style="left:10%">  </div>
+                    <div class="range__container" style="grid-template-columns:10% 1fr 10%">
+                        <div class="range__pad"></div>
+                        <div class="range__selected"></div>
+                        <div class="range__pad"></div>
+                    </div>
+                    <div class="range__button upper" style="right:10%">  </div>
+                </div>
+                <div class="range__values client">
+                    <span class="range__value--lower">10M</span>
+                    <spam class="range__value--upper">90M</span>
+                </div>
+
+                <button class="form__next-button" disabled>Next</button>
+            </div>
+            {% if redirect_field_value %}
+            <input type="hidden"
+                    name="{{ redirect_field_name }}"
+                    value="{{ redirect_field_value }}" />
+            {% endif %}
+        </div>
+    </form>
+</div>
+</main>
+{% endblock content %}
+
+{% block scripts %}
+<script>
+
+    const rangeButtons = document.querySelectorAll('.range__button');
+    const selectedRanges = [1_000, 500_000]
+    const consignmentRanges = [1_000, 500_00]
+    const UPPER_VALUE = 100_000_000
+    const LOWER_VALUE = 10_000
+
+
+
+    //Takes a percentage, from the left or right of the parent div and calculates a monetary value
+    const calculateMoneyValue = (xPercent, isLower) => {
+        monetaryValue = (xPercent * (UPPER_VALUE - LOWER_VALUE) / 100) + LOWER_VALUE;
+
+        return monetaryValue; 
+    }
+    
+    //Takes an event (touch or mouse down) and calculates the distance from the left or right of the range slider.
+    //If it is an upper range, the value is taken away from 100 (%) to calculate the actual percentage from the right.
+    const calculateXPosition = (e) => {
+        e.preventDefault();
+        let isLower = false;
+        let xPos;
+        if(e.type.includes("touch")) {
+            xPos = e.touches[0].clientX;
+        } else {
+            console.log(e.clientX)
+            xPos = e.clientX;
+        }
+        let range;
+        if(e.target.classList.contains("lower")) {
+            isLower = true;
+            range = e.target.nextElementSibling;
+        } else if (e.target.classList.contains("upper")) {
+            range = e.target.previousElementSibling;
+        } else {return;}
+        const lowerBoundary = range.getBoundingClientRect().left;
+        const upperBoundary = range.getBoundingClientRect().right;
+        
+        let percentage = ((xPos - lowerBoundary) * 100) / (upperBoundary - lowerBoundary);
+
+        percentage = percentage < 0 ? 0 : percentage > 100 ? 100 : percentage;
+        if(!isLower) {percentage = 100 - percentage;}
+        percentage = Math.round(percentage);
+
+        const cols = range.style.gridTemplateColumns.split(" ");
+        //console.log(cols);
+        if(isLower) {
+            
+            selectedRanges[0] = calculateMoneyValue(percentage, true);
+            e.target.style = `left: ${percentage}%;`
+            cols[0] = `${percentage}%`;
+        } else {
+            selectedRanges[1] = calculateMoneyValue(100 - percentage, false);
+            e.target.style = `right: ${percentage}%;`
+            cols[2] = `${percentage}%`;
+        }
+        
+        range.style.gridTemplateColumns = cols.join(" ");
+
+        const rangeWrapper = range.parentElement; 
+        const rangeValues = rangeWrapper.nextElementSibling;
+        const rangeFromValue = rangeValues.firstElementChild; 
+        const rangeToValue = rangeValues.lastElementChild;
+        //console.log(rangeFromValue);
+        rangeFromValue.innerText = humanize(selectedRanges[0]);
+        rangeToValue.innerText = humanize(selectedRanges[1]);
+        
+    }
+
+    const humanize = (value) => {
+        if(value > 1_000_000) {
+            return `£${(Math.round(value / 1_000_00)) / 10 }M`
+        }
+        if (value > 1_000) {
+            
+            return `£${value / 1_000}K`
+        }
+        return `${value}`
+    }
+
+    selectedRanges[0] = calculateMoneyValue(10, true);
+    selectedRanges[1] = calculateMoneyValue(90, false);
+
+
+    rangeButtons.forEach(b => {
+        b.addEventListener('mousedown', e => {
+            document.addEventListener('mousemove', calculateXPosition);
+            document.addEventListener('mouseup', e => {
+                document.removeEventListener('mousemove', calculateXPosition);
+            }, {once: true})
+
+        })
+        
+        b.addEventListener('touchmove', e => {
+            calculateXPosition(e)
+        })
+    })
+
+    
+
+</script>
+{% endblock scripts %}

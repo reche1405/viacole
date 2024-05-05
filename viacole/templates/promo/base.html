@@ -19,6 +19,17 @@
         <img class="header__logo nav__logo" src="{% static 'logos/Viacole_White.png'%}"/>
         <div></div>
     </header>
+    <div class="nav__header">
+        <button class="nav-burger">
+            <div class="burger-line"></div>
+            <div class="burger-line"></div>
+            <div class="burger-line"></div>
+        </button>
+        <div>
+            <img class="header__logo nav__logo" src="{% static 'logos/Viacole_White.png'%}"/>
+        </div>
+        <div></div>
+    </div>
     <nav class="nav">
         <button class="nav__close">Close</button>
         <img class="header__logo" src="{% static 'logos/Viacole_White.png'%}"/>
@@ -43,17 +54,39 @@
             </a>
         </div>
     </nav>
-    {% block content %}{% endblock content %}
+
+    {% block content %}
+    
+    {% endblock content %}
+
+
     <footer>
-        
+        <div class="footer__content">
+            <div class="social__accounts">
+                {% for social in social_accounts %}
+                <div class="social__account">
+                    <span>{{social.name}}</span>
+                    {{ social.icon|safe}}
+                </div>
+                {% endfor %}
+            </div>
+            <div class="copyright">
+                <span>&copy; Copyright VIACOLE {% now "Y" %}</span>
+            </div>
+        </div>
     </footer>
 
     <script>
         const closeButton = document.querySelector(".nav__close");
         const nav = document.querySelector(".nav");
-        const burger = document.querySelector(".nav-burger");
+        const burgers = document.querySelectorAll(".nav-burger");
+        const headerNav = document.querySelector('.nav__header');
+        let currentScroll = window.scrollY;
+        let headerNavIsShowing = false;
+
 
         const openNav = () => {
+            headerNav.classList.remove("show");
             nav.classList.add("open");
         }
 
@@ -62,9 +95,31 @@
             console.log("THis should close the nav bar")
         }
 
-        burger.addEventListener('click', openNav);
+        burgers.forEach(b => {
+            b.addEventListener('click', openNav);
+        })
 
         closeButton.addEventListener('click', closeNav);
+
+        document.addEventListener('scroll',(e) => {
+            if(currentScroll > window.scrollY && window.scrollY > 600) {
+                headerNav.classList.add("show");
+            } else if (currentScroll < window.scrollY || window.scrollY < 600) {
+                headerNav.classList.remove("show");
+            }
+
+            currentScroll = window.scrollY;
+        } )
+        document.addEventListener('scrollend', () => {
+            let holder = currentScroll;
+            setTimeout(() => {
+                if(currentScroll === holder) {
+
+                    headerNav.classList.remove("show");
+                }
+            }, 4000)
+
+        })
     </script>
     {% block scripts %}
     {% endblock scripts %}

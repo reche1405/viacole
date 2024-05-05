@@ -1,7 +1,7 @@
 {% extends "promo/base.html" %}
 
 {% block content %}
-<a href="{% url 'accounts/signup' %}" class="btn global-get-quote__button">start now | register</a>
+<a href="{% url 'account_signup' %}" class="btn global-get-quote__button">start now | register</a>
 <section class="legend">
     <video class="legend__video" preload="none" autoplay muted loop>
         <source src={{legend.file.url}}>
@@ -133,6 +133,7 @@
     const portfolioSlider = document.querySelector(".portfolio-slider__container");
     let portfolioSlides = document.querySelectorAll('.portfolio-slide');
     const portfolioNextButton = document.querySelector('.portfolio-slider__arrow-button');
+
 
 
 

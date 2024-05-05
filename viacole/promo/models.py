@@ -242,3 +242,15 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.email
+
+class SocialMediaAccount(models.Model):
+    base_url = models.URLField()
+    name = models.CharField(max_length=100)
+    tag = models.CharField(max_length=50)
+    icon = models.TextField()
+
+    def __str__(self):
+        return self.name
+    
+    def get_full_url(self):
+        return f"{self.base_url}/{self.tag}"

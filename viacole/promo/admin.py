@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import LegendVideo, CompareSlider, Service,\
 Project, ProjectMedia, Testimonial, Page, BudgetRange,\
-AboutContent, FrequentlyAskedQuestion, Term
+AboutContent, FrequentlyAskedQuestion, Term, SocialMediaAccount
 # Register your models here.
 
 admin.site.register(LegendVideo)
@@ -15,3 +15,4 @@ admin.site.register(BudgetRange)
 admin.site.register(AboutContent)
 admin.site.register(FrequentlyAskedQuestion)
 admin.site.register(Term)
+admin.site.register(SocialMediaAccount)
