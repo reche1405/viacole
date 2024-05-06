@@ -14,20 +14,24 @@ class RegistrationForm(forms.Form):
             "hidden" : "true"
         }
     ))
-    purchase_interests = forms.ModelMultipleChoiceField(
-        queryset=Service.objects.all(),
-        widget=forms.CheckboxSelectMultiple(
+    purchase_interests = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
             attrs = {
                 "hidden" : "true"
             }
         )
     )
-    consignment_range = forms.CharField(widget=forms.TextInput(
+    consignment_range = forms.CharField(required=False, widget=forms.TextInput(
         attrs = {
             "hidden" : "true"
         }
     ))
-    consignment_interests = forms.ModelMultipleChoiceField(
-        queryset=Service.objects.all(),
-        widget=forms.CheckboxSelectMultiple()
+    consignment_interests = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs = {
+                "hidden" : "true"
+            }
+        )
     )

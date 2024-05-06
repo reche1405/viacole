@@ -16,7 +16,7 @@
             <div class="burger-line"></div>
             <div class="burger-line"></div>
         </button>
-        <img class="header__logo nav__logo" src="{% static 'logos/Viacole_White.png'%}"/>
+        <img class="header__logo" src="{% static 'logos/Viacole_White.png'%}"/>
         <div></div>
     </header>
     <div class="nav__header">
@@ -31,17 +31,21 @@
         <div></div>
     </div>
     <nav class="nav">
-        <button class="nav__close">Close</button>
-        <img class="header__logo" src="{% static 'logos/Viacole_White.png'%}"/>
+        <button class="nav__close">
+            <svg width="20" height="20">
+            <path style="stroke:#ffffff; stroke-width:3; stroke-linecap:round;" d="M2 2 L18 18 Z"/>
+                <path style="stroke:#ffffff; stroke-width:3; stroke-linecap:round;" d="M18 2 L2 18 Z"/>
+            </svg>
+        </button>
 
-        <a href="{% url 'home' %}">
+        <a href="{% url 'promo:home' %}">
             <li>HOME</li>
         </a>
-        <a href="{% url 'services' %}">
+        <a href="{% url 'promo:services' %}">
 
             <li>SERVICES</li>
         </a>
-        <a href="{% url 'about' %}">
+        <a href="{% url 'promo:about' %}">
             <li>ABOUT</li>
         </a>
         <div>
@@ -49,7 +53,7 @@
                 <span>FAQ</span>
             </a>
             <span> . </span>
-            <a href="{% url 'terms' %}">
+            <a href="{% url 'promo:terms' %}">
                 <span>TERMS</span>
             </a>
         </div>

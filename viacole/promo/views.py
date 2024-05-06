@@ -1,7 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django import views
+from django.core.mail import EmailMessage
+from django.conf import settings
 from .models import CompareSlider, LegendVideo, Project, ProjectMedia, Testimonial,\
-     Term, Page, AboutContent, Service
+     Term, Page, AboutContent, Service, Profile
 from .forms import RegistrationForm
 
 TEMPLATE_BASE = "promo/"
@@ -52,8 +54,12 @@ class ServicesView(views.View):
     
 class RegisterView(views.View):
     def get(self, *args, **kwargs):
+        print(self.request.user.email)
+        if not self.request.user.is_authenticated:
+            return redirect("accounts:signup")
+        
         form = RegistrationForm()
-        services = Service.objects.all()
+        services = Service.objects.all().order_by("-id")
         context = {
             'form' : form,
             'services' : services
@@ -62,8 +68,44 @@ class RegisterView(views.View):
     def post(self, *args, **kwargs):
         form = RegistrationForm(self.request.POST)
         if form.is_valid():
-            pass
+            user = self.request.user
+            if(Profile.user_profile_exists(user)):
+                #TODO: Change this to a you already have an account page rather than home.
+                return redirect("promo:home")
+            profile = Profile.create_profile(self.request.user, form.cleaned_data)
 
+            subject = "Welcome to VIACOLE - Verify your details."
+            body = f""" 
+            <html>
+                <head>
+                </head>
+                <body style="background-color:#333333; color:#ffffff;">
+                    <h1>Welcome</h1>
+                    <p>Thank you for signing up to VIACOLE.</p>
+                    <p>To verify your account, please follow the below link</p>
+                    <a href="">VEERIFY MY ACCOUNT</a>
+                    <p>Here at VIACOLE, we simplify the buying and selling process by
+                    ensuring all of our clients</p>
+                </body>
+            </html>
+            """
+            to_list = [user.email]
+            from_address = settings.EMAIL_HOST_USER
+            msg = EmailMessage(subject,body, from_address, to_list)
+            msg.content_subtype = "html"
+            msg.send(fail_silently=False)
+           #TODO: send the htnl email
+            return redirect("promo:home")
+        else:
+            print(f"{form.data}")
+            services = Service.objects.all().order_by("-id")
+            context = {
+                "form" : form,
+                "services" : services
+            }
+            return render(self.request,f"{TEMPLATE_BASE}register.html", context)
+
+            
     
 class LoginView(views.View): 
     def get(self, *args, **kwargs): 

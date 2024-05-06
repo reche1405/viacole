@@ -3,6 +3,7 @@ from django.core.validators import FileExtensionValidator
 from django.utils.text import slugify
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 
 ANSWER_TYPES = (
@@ -31,9 +32,13 @@ class Service(models.Model):
     title = models.CharField(max_length=30)
     description = models.TextField()
     image = models.ImageField(upload_to=service_upload, blank=True, null=True)
+    display_order = models.IntegerField(unique=True, blank=True, null=True)
 
     def __str__(self) -> str:
         return self.title
+    
+    #TODO: Rename to categories, and change everywhere else, then create a new services model
+    #TODO: The new services model will be for third party service 
 
 
 class Project(models.Model):
@@ -221,7 +226,7 @@ class FrequentlyAskedQuestion(models.Model):
 
 
 class Profile(models.Model):
-    user = get_user_model()
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="profile", blank=True, null=True)
     is_buyer = models.BooleanField(default=False)
     is_seller = models.BooleanField(default=False)
     buyers_budget = models.ForeignKey(
@@ -242,6 +247,33 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.email
+    
+    def create_profile(user, data):
+
+        
+        profile = Profile.objects.create(
+            user=user, is_buyer=data['is_buyer'],
+            is_seller=data['is_vendor'],                           
+        )
+
+        if data['is_buyer']:
+            range_str = data["purchase_range"]
+            range_arr = range_str.split(" - ")
+            purchase_range = BudgetRange.objects.create(from_value=range_arr[0], to_value=range_arr[1])  
+            purchase_range.save()
+            profile.buyers_budget = purchase_range
+        if data['is_vendor']:
+            range_str = data["consignment_range"]
+            range_arr = range_str.split(" - ")
+            consignment_range = BudgetRange.objects.create(from_value=range_arr[0], to_value=range_arr[1])
+            consignment_range.save()
+            profile.sellers_budget = consignment_range
+        profile.save()
+        return profile
+    
+    def user_profile_exists(user):
+        profile = Profile.objects.filter(user=user)
+        return profile.exists()
 
 class SocialMediaAccount(models.Model):
     base_url = models.URLField()

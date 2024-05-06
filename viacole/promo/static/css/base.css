@@ -80,15 +80,17 @@ a:any-link {
     position:fixed;
     width:300px;
     height:100%;
-    background-color:#000;
+    background-color:rgba(0,0,0,0.7);
+    backdrop-filter: blur(7px);
     z-index:22;
     list-style-type: none;
+    font-size:0.9rem;
     padding:1rem;
     left:-300px;
     transition:1s;
     display:flex;
     flex-direction: column;
-    gap:2rem;
+    gap:1rem;
 }
 
 .nav-burger {
@@ -98,10 +100,14 @@ a:any-link {
 }
 
 .burger-line {
-    width:20px;
-    height:2px; 
+    width:30px;
+    height:3px; 
     background-color:#fff;
     margin-block:5px;
+}
+
+.burger-line:first-of-type, .burger-line:last-of-type {
+    width:20px;
 }
 .nav.open {
     transition:1s;
@@ -112,6 +118,8 @@ a:any-link {
 .nav__close {
     background-color:transparent;
     border: none;
+    text-align: right;
+    margin-bottom:3rem;
 }
 
 .btn {
@@ -422,28 +430,25 @@ object-fit:cover;
 }
 
 section.service {
-    min-height:90lvh;
-    display:grid;
-    grid-template-columns: 70% 30%;
-   
-    grid-template-areas: 'details image';
-    padding-bottom:4rem;
-}
-section.service:nth-of-type(even) {
-    grid-template-columns: 30% 70%;
-    grid-template-areas: 'image details';
-    text-align:right;
+    position:absolute;
+    top:0;
+    left:0;
+    min-height:100lvh;
+    width:100%;
 
+}
+.image__overlay {
+    width:100%;
+    position:fixed;
+    z-index: 10;
+    background-color: rgba(0,0,0,0.2);
+    height:100%;
 }
 .service__details {
     display:flex; 
     flex-direction: column;
     justify-content: center;
     gap:2rem;
-    grid-area: details;
-}
-section.service:nth-of-type(even) .service__details {
-    align-items:flex-end;
 }
 .service__details p {
     max-width: 65ch;
@@ -451,8 +456,10 @@ section.service:nth-of-type(even) .service__details {
 }
 
 .service__image {
-    position: relative;
-    grid-area: image;
+    position: absolute;
+    width:100%;
+    height:100%;
+    object-fit: cover;
 }
 .service__image img {
     width:100%;
@@ -637,7 +644,15 @@ background-color: rgb(0,0,0, 0.3);
 .terms h1 {
     padding-bottom:.5rem;
 }
+.form__header {
+    text-align:center;
+}
 
+.form__question {
+    padding-block:3rem;
+    font-size:1.2rem;
+    text-align:center;
+}
 
 .form__slider {
     position:relative; 
@@ -663,7 +678,7 @@ background-color: rgb(0,0,0, 0.3);
 .form__input--full {
     grid-column: 0 4;
 }
-form p {
+form p:not(p.form__question) {
     display:flex;
     margin-bottom:1rem; ;
 
@@ -684,14 +699,18 @@ form p input {
 }
 
 .account__form button:not(.btn.btn-pill) {
-    width:100%;
-    max-width:400px;
     margin-inline: auto;
-    padding:1rem 3rem;
+    font-size:1.2rem;
+    padding:1rem 5rem;
     background-color:#000;
-    border-radius:1.5rem;
-    border:2px solid #000;
+    border-radius:2rem;
+    border:2px solid #fff;
     margin-block:3rem;
+}
+
+.account__form button:disabled {
+    opacity:0.5;
+    cursor:not-allowed;
 }
 
 .pill-flex {
@@ -708,6 +727,13 @@ form p input {
     font-size:0.7rem;
     padding:0.7rem 1.4rem;
 }
+.btn.btn-pill:hover {
+    border-color:#fff;
+}
+.btn.btn-pill.selected {
+    background-color:#fff;
+    color:#000;
+}
 form ul {
     background-color:#000;
     padding:1rem;
@@ -720,8 +746,8 @@ form ul.errorlist {
 }
 
 .custom__checkbox {
-    width:2.5rem;
-    height:2.5rem;
+    width:2rem;
+    height:2rem;
     background-color: #fff;
     margin-inline:auto;
     border-radius: 0.5rem;
@@ -729,10 +755,14 @@ form ul.errorlist {
     align-items: center;
     justify-content: center;
     cursor:pointer;
+    border:2px solid #fff;
 }
 
 .custom__checkbox:has(input[type="checkbox"]:checked) {
     background-color:#000;
+}
+.custom__checkbox input {
+    display:none;
 }
 
 .range__slider {
@@ -750,6 +780,10 @@ form ul.errorlist {
     background-color:#fff;
     border-radius:50%; 
     top:-0.25rem;
+    cursor:pointer;
+}
+.range__button:hover {
+    border:2px solid #000;
 }
 .range__button.upper {
     right:0;
@@ -774,8 +808,7 @@ form ul.errorlist {
 .range__values {
     width:100%;
     display:grid; 
-    grid-template-columns: repeat(2, 1fr);
-    padding-block:3rem;
+    grid-template-columns: repeat(3, 1fr);
 
 }
 .range__values > * {
@@ -783,7 +816,7 @@ form ul.errorlist {
     align-items: center;
     justify-content: center;
     text-align: center;
-    font-size:3rem;
+    font-size:2.5rem;
 } 
 
 
@@ -796,12 +829,9 @@ form ul.errorlist {
         display: none;
     }
     .compare-slider {
-        display:block;
+        display:none;
         height:unset;
-    }
 
-    .compare-slider__slide-wrapper {
-        aspect-ratio: 16/9;
     }
     .portfolio-slider__container {
         width:300%;
@@ -827,6 +857,11 @@ form ul.errorlist {
         justify-content: baseline;
         align-items: baseline;
         gap:1rem;
+    }
+
+    .form__question {
+        max-width:65ch;
+        padding-inline: 1.5rem;
     }
 }
 
