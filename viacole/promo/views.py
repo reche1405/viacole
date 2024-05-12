@@ -3,7 +3,7 @@ from django import views
 from django.core.mail import EmailMessage
 from django.conf import settings
 from .models import CompareSlider, LegendVideo, Project, ProjectMedia, Testimonial,\
-     Term, Page, AboutContent, Service, Profile
+     Term, Page, AboutContent, Service, Profile, Category
 from .forms import RegistrationForm
 
 TEMPLATE_BASE = "promo/"
@@ -16,7 +16,7 @@ class HomeView(views.View):
         featured_project = Project.get_feauted()
         featured_video = ProjectMedia.objects.filter(project=featured_project)
         featured_video = featured_video[0]
-        portfolio_slides =  Project.get_home_portfolio()
+        category_slides =  Category.get_home_cateogires()
         testimonials = Testimonial.get_random_tesimonials()
         page_meta = Page.get_page("Home")
         context = {
@@ -25,7 +25,7 @@ class HomeView(views.View):
             "featured" : featured_project,
             "featured_video" : featured_video,
             "testimonials" : testimonials,
-            "portfolio" : portfolio_slides,
+            "categories" : category_slides,
             "meta" : page_meta
 
         }
@@ -54,15 +54,13 @@ class ServicesView(views.View):
     
 class RegisterView(views.View):
     def get(self, *args, **kwargs):
-        print(self.request.user.email)
         if not self.request.user.is_authenticated:
-            return redirect("accounts:signup")
-        
+            return redirect("account_signup")        
         form = RegistrationForm()
-        services = Service.objects.all().order_by("-id")
+        categories = Category.objects.all().order_by("-id")
         context = {
             'form' : form,
-            'services' : services
+            'categories' : categories
         }
         return render(self.request,f"{TEMPLATE_BASE}register.html", context)
     def post(self, *args, **kwargs):
@@ -76,7 +74,8 @@ class RegisterView(views.View):
 
             subject = "Welcome to VIACOLE - Verify your details."
             body = f""" 
-            <html>
+            <!DOCTYPE html>
+            <html lang="en-gb">
                 <head>
                 </head>
                 <body style="background-color:#333333; color:#ffffff;">
@@ -95,7 +94,7 @@ class RegisterView(views.View):
             msg.content_subtype = "html"
             msg.send(fail_silently=False)
            #TODO: send the htnl email
-            return redirect("promo:home")
+            return redirect("promo:register-confirmation")
         else:
             print(f"{form.data}")
             services = Service.objects.all().order_by("-id")
@@ -106,7 +105,9 @@ class RegisterView(views.View):
             return render(self.request,f"{TEMPLATE_BASE}register.html", context)
 
             
-    
+class RegisterConfirmationView(views.View):
+    def get(self, *args, **kwargs):
+        return render(self.request, f"{TEMPLATE_BASE}register-confirm.html")
 class LoginView(views.View): 
     def get(self, *args, **kwargs): 
         form = RegistrationForm

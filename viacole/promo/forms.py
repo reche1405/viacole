@@ -2,6 +2,10 @@ from django import forms
 from .models import Service
 
 class RegistrationForm(forms.Form):
+    tel_num = forms.CharField(
+        widget=forms.TextInput(
+        )
+    )
     is_buyer = forms.BooleanField(required=False, widget= forms.CheckboxInput(
             
         )

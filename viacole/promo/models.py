@@ -26,6 +26,7 @@ class QuoteQuestion(models.Model):
         return self.question
 
 
+# The third party services that are offered in partnership with viacole
 class Service(models.Model):
     def service_upload(instance, filename):
         return f"services/{instance.title}/{filename}"
@@ -33,18 +34,39 @@ class Service(models.Model):
     description = models.TextField()
     image = models.ImageField(upload_to=service_upload, blank=True, null=True)
     display_order = models.IntegerField(unique=True, blank=True, null=True)
+    link = models.URLField(blank=True, null=True)
 
     def __str__(self) -> str:
         return self.title
     
-    #TODO: Rename to categories, and change everywhere else, then create a new services model
-    #TODO: The new services model will be for third party service 
+
+# The categories of interest on the platform
+class Category(models.Model):
+    def category_upload(instance, filename):
+        return f"categories/{instance.title}/{filename}"
+    title = models.CharField(max_length=30)
+    description = models.TextField()
+    image = models.ImageField(upload_to=category_upload, blank=True, null=True)
+    video = models.FileField(
+        upload_to=category_upload, 
+        validators=[FileExtensionValidator(allowed_extensions=['MOV', 'mp4', 'avi', 'mkv'])],                         
+        blank=True, null=True
+    )
+    display_order = models.IntegerField(unique=True, blank=True, null=True)
+
+    def __str__(self) -> str:
+        return self.title
+    
+    def get_home_cateogires():
+
+        categories = Category.objects.all().order_by("id")
+        return categories
 
 
 class Project(models.Model):
     customer = models.CharField(max_length=100)
     title = models.CharField(max_length=100)
-    services = models.ManyToManyField(Service, related_name="projects")
+    categories = models.ManyToManyField(Category, related_name="projects")
     overview = models.TextField()
     slug = models.SlugField(unique=True, editable=False, blank=True)
     is_featured = models.BooleanField(default=False)
@@ -111,12 +133,12 @@ class CompareSlider(models.Model):
     image_one = models.ImageField(upload_to=slider_directory_path)
     title_one = models.CharField(max_length=100)
     info_one = models.TextField()
-    services_one = models.ManyToManyField(Service, related_name='first_slide')
+    categories_one = models.ManyToManyField(Category, related_name='first_slide')
 
     image_two = models.ImageField(upload_to=slider_directory_path)
     title_two =models.CharField(max_length=100)
     info_two = models.TextField()
-    services_two = models.ManyToManyField(Service, related_name='second_slide')
+    categories_two = models.ManyToManyField(Category, related_name='second_slide')
 
     is_current = models.BooleanField(default=False)
 
@@ -227,6 +249,7 @@ class FrequentlyAskedQuestion(models.Model):
 
 class Profile(models.Model):
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="profile", blank=True, null=True)
+    phone_number = models.TextField(max_length=16, default="NOT PROVIDED")
     is_buyer = models.BooleanField(default=False)
     is_seller = models.BooleanField(default=False)
     buyers_budget = models.ForeignKey(
@@ -241,8 +264,8 @@ class Profile(models.Model):
         blank=True, null=True,
         related_name="sellers_profile"
     )
-    interested_services = models.ManyToManyField(Service, related_name="buyers_profiles")
-    interested_consignments  = models.ManyToManyField(Service, related_name="sellers_profiles")
+    interested_services = models.ManyToManyField(Category, related_name="buyers_profiles")
+    interested_consignments  = models.ManyToManyField(Category, related_name="sellers_profiles")
     is_verified = models.BooleanField(default=False)
 
     def __str__(self):

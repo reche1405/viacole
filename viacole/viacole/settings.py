@@ -152,12 +152,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #TODO: link to josh's emaail provider
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+
 # Account Settings
 
 ACCOUNT_AUTHENTICATION_METHOD  = "email"
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_SIGNUP_REDIRECT_URL = "/register/"
-
+LOGIN_REDIRECT_URL = "/"
 ACCOUNT_EMAIL_VERIFICATION = "none"
 

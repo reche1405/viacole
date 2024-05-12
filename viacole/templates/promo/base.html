@@ -17,7 +17,7 @@
             <div class="burger-line"></div>
         </button>
         <img class="header__logo" src="{% static 'logos/Viacole_White.png'%}"/>
-        <div></div>
+        <div class="nav__padding-right"></div>
     </header>
     <div class="nav__header">
         <button class="nav-burger">
@@ -28,7 +28,7 @@
         <div>
             <img class="header__logo nav__logo" src="{% static 'logos/Viacole_White.png'%}"/>
         </div>
-        <div></div>
+        <div class="nav__padding-right"></div>
     </div>
     <nav class="nav">
         <button class="nav__close">
@@ -48,14 +48,23 @@
         <a href="{% url 'promo:about' %}">
             <li>ABOUT</li>
         </a>
-        <div>
-            <a href="">
-                <span>FAQ</span>
-            </a>
-            <span> . </span>
-            <a href="{% url 'promo:terms' %}">
-                <span>TERMS</span>
-            </a>
+        <div class="nav__footer">
+            <div>
+                <a href="">
+                    <span>FAQ</span>
+                </a>
+                <span> . </span>
+                <a href="{% url 'promo:terms' %}">
+                    <span>TERMS</span>
+                </a>
+            </div>
+            <div class="social__accounts">
+                {% for social in social_accounts %}
+                <div class="social__account">
+                    {{ social.icon|safe}}
+                </div>
+                {% endfor %}
+            </div>
         </div>
     </nav>
 
@@ -66,14 +75,7 @@
 
     <footer>
         <div class="footer__content">
-            <div class="social__accounts">
-                {% for social in social_accounts %}
-                <div class="social__account">
-                    <span>{{social.name}}</span>
-                    {{ social.icon|safe}}
-                </div>
-                {% endfor %}
-            </div>
+            
             <div class="copyright">
                 <span>&copy; Copyright VIACOLE {% now "Y" %}</span>
             </div>

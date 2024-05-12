@@ -2,22 +2,59 @@
 
 {% block content %}
 
-<main class="standard__content">
-    <h1 class="standard__page-title">SERVICES</h1>
-{% for service in services %}
-    <section class="service">
-        <div class="service__details">
-            <h2>{{service.title}}</h2>
-            <p>{{service.description}}</p>
-            <div>
-
-                <a class="btn-link">SIGN UP/ REGISTER</a>
+<main class="full__content">
+    <div class="services__wrapper">
+        <h1 class="standard__page-title">SERVICES</h1>
+        {% for service in services %}
+        {% if forloop.counter == 1 %}
+        <section class="service current">
+        {% else %}
+        <section class="service">
+        {% endif %}
+            <div class="service__image">
+                <img src="{{service.image.url}}"/>
+                <div class="image__overlay">
+                    
+                    <div class="service__details">
+                        <h2>{{service.title}}</h2>
+                        <p>{{service.description}}</p>
+                        <a class="btn-link" href="{{service.link}}" target="_blank">LEARN MORE</a>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="service__image">
-            <img src="{{service.image.url}}"/>
-        </div>
-    </section>
-    {% endfor %}
+            
+            
+        </section>
+        {% endfor %}
+        <section class="services__overlay">
+            {% for service in services %}
+                <button class="service__button">
+                    {{ service.title }}
+                </button>
+            {% endfor %}
+
+        </class>
+    </div>
 </main>
 {% endblock content %}
+
+{% block scripts %}
+<script>
+    const serviceWindows = document.querySelectorAll("section.service");
+    const serviceButtons = document.querySelectorAll(".service__button");
+
+    const handleHover = e => {
+        const index = Array.from(serviceButtons).indexOf(e.target);
+        const window = serviceWindows[index];
+        console.log(window);
+        serviceWindows.forEach(sw => {sw.classList.remove("current")});
+        window.classList.add("current");
+    }
+
+    serviceButtons.forEach(sb => {
+        sb.addEventListener("mouseenter", handleHover);
+        sb.addEventListener("touchstart", handleHover);
+    })
+
+</script>
+{% endblock %}

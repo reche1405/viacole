@@ -23,6 +23,15 @@
                 <p>
                     The information completed in this form will be assigned to your vetting application.
                 </p> {% endcomment %}
+                <div class="form__control">
+                    <div class="form__label">
+                        <label>Phone No </label>
+                    </div>
+                    <div class="form__input--full">
+                        
+                            {{form.tel_num}}
+                    </div>
+                </div>
                 <p class="form__question">
                     What aspects of the platform are of interest to you?
                 </p>
@@ -56,9 +65,9 @@
                 <div class="form__input--full">
                         {{form.purchase_interests}}
                         <div class="pill-flex client">
-                            {% for service in services %}
+                            {% for category in categories %}
         
-                            <button class="btn btn-pill">{{service.title}}</button>
+                            <button class="btn btn-pill">{{category.title}}</button>
                             {% endfor %}
                         </div>
                 </div>
@@ -93,9 +102,9 @@
                 <div class="form__input--full">
                         {{form.consignment_interests}}
                         <div class="pill-flex">
-                            {% for service in services %}
+                            {% for category in categories %}
         
-                            <button class="btn btn-pill">{{service.title}}</button>
+                            <button class="btn btn-pill">{{category.title}}</button>
                             {% endfor %}
                         </div>
                 </div>
