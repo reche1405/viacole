@@ -1,0 +1,60 @@
+{% extends "promo/base.html" %}
+
+{% block content %}
+
+<main class="full__content">
+    <div class="services__wrapper">
+        <h1 class="standard__page-title">SERVICES</h1>
+        {% for category in categories %}
+        {% if forloop.counter == 1 %}
+        <section class="service current">
+        {% else %}
+        <section class="service">
+        {% endif %}
+            <div class="service__image">
+                <img src="{{category.image.url}}"/>
+                <div class="image__overlay">
+                    
+                    <div class="service__details">
+                        <h2>{{category.title}}</h2>
+                        <p>{{category.description}}</p>
+                        <a class="btn-link" href="{{category.link}}" target="_blank">LEARN MORE</a>
+                    </div>
+                </div>
+            </div>
+            
+            
+        </section>
+        {% endfor %}
+        <section class="services__overlay">
+            {% for category in categories %}
+                <button class="service__button">
+                    {{ category.title }}
+                </button>
+            {% endfor %}
+
+        </class>
+    </div>
+</main>
+{% endblock content %}
+
+{% block scripts %}
+<script>
+    const serviceWindows = document.querySelectorAll("section.service");
+    const serviceButtons = document.querySelectorAll(".service__button");
+
+    const handleHover = e => {
+        const index = Array.from(serviceButtons).indexOf(e.target);
+        const window = serviceWindows[index];
+        console.log(window);
+        serviceWindows.forEach(sw => {sw.classList.remove("current")});
+        window.classList.add("current");
+    }
+
+    serviceButtons.forEach(sb => {
+        sb.addEventListener("mouseenter", handleHover);
+        sb.addEventListener("touchstart", handleHover);
+    })
+
+</script>
+{% endblock %}

@@ -5,6 +5,9 @@ from django.conf import settings
 from .models import CompareSlider, LegendVideo, Project, ProjectMedia, Testimonial,\
      Term, Page, AboutContent, Service, Profile, Category
 from .forms import RegistrationForm
+import requests
+
+
 
 TEMPLATE_BASE = "promo/"
 
@@ -52,6 +55,15 @@ class ServicesView(views.View):
         }
         return render(self.request, f"{TEMPLATE_BASE}services.html", context)
     
+class CategoriesView(views.View):
+    def get(self, *args, **kwargs):
+        meta = Page.get_page("Categories")
+        categories = Category.get_all()
+        context = {
+            meta : "meta",
+            "categories" : categories
+        }
+        return render(self.request, f"{TEMPLATE_BASE}categories.html", context)
 class RegisterView(views.View):
     def get(self, *args, **kwargs):
         if not self.request.user.is_authenticated:
@@ -72,8 +84,8 @@ class RegisterView(views.View):
                 return redirect("promo:home")
             profile = Profile.create_profile(self.request.user, form.cleaned_data)
 
-            subject = "Welcome to VIACOLE - Verify your details."
-            body = f""" 
+            """ subject = "Welcome to VIACOLE - Verify your details."
+            body = f   #Would need to add back in triple quoutes
             <!DOCTYPE html>
             <html lang="en-gb">
                 <head>
@@ -87,12 +99,12 @@ class RegisterView(views.View):
                     ensuring all of our clients</p>
                 </body>
             </html>
-            """
+            #Would need to add back in triple quoutes
             to_list = [user.email]
             from_address = settings.EMAIL_HOST_USER
             msg = EmailMessage(subject,body, from_address, to_list)
             msg.content_subtype = "html"
-            msg.send(fail_silently=False)
+            msg.send(fail_silently=False) """
            #TODO: send the htnl email
             return redirect("promo:register-confirmation")
         else:

@@ -1,7 +1,10 @@
 {% extends "promo/base.html" %}
 
 {% block content %}
+{% if request.user.is_authenticated %}
+{% else %}
 <a href="{% url 'account_signup' %}" class="btn global-get-quote__button">start now | register</a>
+{% endif %}
 <section class="legend">
     <video class="legend__video" preload="none" autoplay muted loop>
         <source src={{legend.file.url}}>
@@ -21,8 +24,8 @@
         <h1 class="legend__header">{{legend.title}}</h1>    
         <p class="legend__subheader">{{legend.info}}</p>     
         <nav class="legend__nav">
-            <li class="legend__nav-item" ><a>CATEOGIRES</a></li>
             <li class="legend__nav-item"><a href="{% url 'promo:services' %}">SERVICES</a></li>
+            <li class="legend__nav-item" ><a href="{% url 'promo:categories' %}">CATEOGIRES</a></li>
             <li class="legend__nav-item"><a href="{% url 'account_signup' %}">REGISTER</a></li>
         </nav>
     </div>

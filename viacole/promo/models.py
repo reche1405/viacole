@@ -62,6 +62,8 @@ class Category(models.Model):
         categories = Category.objects.all().order_by("id")
         return categories
 
+    def get_all():
+        return Category.objects.all()
 
 class Project(models.Model):
     customer = models.CharField(max_length=100)
@@ -275,7 +277,7 @@ class Profile(models.Model):
 
         
         profile = Profile.objects.create(
-            user=user, is_buyer=data['is_buyer'],
+            user=user, phone_number=data["tel_num"], is_buyer=data['is_buyer'],
             is_seller=data['is_vendor'],                           
         )
 
