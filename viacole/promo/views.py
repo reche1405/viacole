@@ -2,10 +2,11 @@ from django.shortcuts import render, redirect
 from django import views
 from django.core.mail import EmailMessage
 from django.conf import settings
+from django.contrib import messages
 from .models import CompareSlider, LegendVideo, Project, ProjectMedia, Testimonial,\
      Term, Page, AboutContent, Service, Profile, Category
 from .forms import RegistrationForm
-import requests
+import requests, json
 
 
 
@@ -84,6 +85,29 @@ class RegisterView(views.View):
                 return redirect("promo:home")
             profile = Profile.create_profile(self.request.user, form.cleaned_data)
 
+            url = settings.CHECKBOARD_BASE_URL
+            payload = {
+                "client_id" : settings.CHECKBOARD_CLIENT_ID,
+                "phone" : profile.phone_number,
+                "bundle_id" : settings.CHECKBOARD_BUNDLE_ID,
+                "user_id" : profile.id,
+                "email" : user.email,
+            }
+            headers = {
+                "Authorization" : f"Bearer {settings.CHECKBOARD_BEARER_TOKEN}",
+                "Accept" : "application/json"
+            }
+            try:
+                response = requests.request("POST", url=url, headers=headers, data=payload)
+                result = response.json()
+                if response["Status"] == "Created":
+                    messages.add_message(self.request, messages.SUCCESS, "Account Created. Please keep an eye out for a verification text.")
+                    return redirect("promo:register-confirmation")
+
+            except Exception as e:
+                messages.add_message(self.request, messages.ERROR, "There was an error trying to verify your details. Please try again.")
+                return redirect("promo:register")
+                print(e)
             """ subject = "Welcome to VIACOLE - Verify your details."
             body = f   #Would need to add back in triple quoutes
             <!DOCTYPE html>
@@ -106,15 +130,9 @@ class RegisterView(views.View):
             msg.content_subtype = "html"
             msg.send(fail_silently=False) """
            #TODO: send the htnl email
-            return redirect("promo:register-confirmation")
         else:
-            print(f"{form.data}")
-            services = Service.objects.all().order_by("-id")
-            context = {
-                "form" : form,
-                "services" : services
-            }
-            return render(self.request,f"{TEMPLATE_BASE}register.html", context)
+            messages.add_message(self.request, messages.ERROR, "There was an error creating your account, Please try again.")
+            return redirect("promo:register")
 
             
 class RegisterConfirmationView(views.View):

@@ -169,7 +169,8 @@ ACCOUNT_EMAIL_VERIFICATION = "none"
 CHECKBOARD_CLIENT_ID = 908
 CHECKBOARD_BEARER_TOKEN = "1945|1cM4SLPhS6DY1u8TvRaSMhZx020W5E892PsrZt4r"
 CHECKBOARD_BUYER_BUNDLE = 8
+CHECKBOARD_SELLER_BUNDLE = 8
 if DEBUG:
     CHECKBOARD_API_URL = "https://api.checkboard.tech/v2/client/users/invite"
 else: 
-    CHECKBOARD_API_URL = "https://api.checkboard.com/v2"
+    CHECKBOARD_API_URL = "https://api.checkboard.com/v2/client/users/invite"
